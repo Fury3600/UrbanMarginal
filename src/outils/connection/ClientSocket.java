@@ -1,4 +1,4 @@
-package outils.connexion;
+package outils.connection;
 
 import java.io.IOException;
 import java.net.Socket;

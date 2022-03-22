@@ -16,13 +16,14 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 
 import controleur.Controle;
+import controleur.Global;
 
 /**
  * Frame du choix du joueur
  * @author emds
  *
  */
-public class ChoixJoueur extends JFrame {
+public class ChoixJoueur extends JFrame implements Global{
 	
 	/**
 	 * Label d'affichage du personnage
@@ -31,7 +32,6 @@ public class ChoixJoueur extends JFrame {
 	/**
 	 * Personnages à afficher
 	 */
-	public final int persoMax = 3;
 	public int selectedPerso;
 	/**
 	 * Instance du Contrôleur pour communiquer avec lui
@@ -50,7 +50,7 @@ public class ChoixJoueur extends JFrame {
 	 * Méthode affichant le perso choisi
 	 */
 	public void affichePerso(int selectedPerso) {
-		String cheminPerso = "personnages/perso" + selectedPerso + "marche1d1.gif";
+		String cheminPerso = CHEMINPERSO + selectedPerso + POSECHOIX + DIRECTION + FORMATIMG;
 		URL ressourcePerso = getClass().getClassLoader().getResource(cheminPerso);
 		this.lblPersonnage.setIcon(new ImageIcon(ressourcePerso));
 	}
@@ -78,7 +78,7 @@ public class ChoixJoueur extends JFrame {
 		selectedPerso--;
 		if (selectedPerso < 1)
 		{
-			selectedPerso = persoMax;
+			selectedPerso = PERSOMAX;
 		}
 		affichePerso(selectedPerso);
 	}
@@ -89,7 +89,7 @@ public class ChoixJoueur extends JFrame {
 	private void lblSuivant_clic() {
 		System.out.println("Clic sur suivant");
 		selectedPerso++;
-		if (selectedPerso > persoMax)
+		if (selectedPerso > PERSOMAX)
 		{
 			selectedPerso = 1;
 		}
@@ -125,12 +125,12 @@ public class ChoixJoueur extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		selectedPerso = 1;
 		lblPersonnage = new JLabel("");
 		lblPersonnage.setAlignmentY(0.0f);
 		lblPersonnage.setBounds(142, 114, 120, 120);
 		lblPersonnage.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblPersonnage);
-		selectedPerso = 1;
 		affichePerso(selectedPerso);
 		
 		JLabel lblPrecedent = new JLabel("");
@@ -195,8 +195,7 @@ public class ChoixJoueur extends JFrame {
 		
 		JLabel lblFond = new JLabel("");
 		lblFond.setBounds(0, 0, 400, 275);
-		String chemin = "fonds/fondchoix.jpg";
-		URL ressource = getClass().getClassLoader().getResource(chemin);
+		URL ressource = getClass().getClassLoader().getResource(CHEMINFONDCHOIX);
 		lblFond.setIcon(new ImageIcon(ressource));		
 		contentPane.add(lblFond);
 		
