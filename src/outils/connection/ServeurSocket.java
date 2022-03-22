@@ -1,18 +1,18 @@
-package outils.connexion;
+package outils.connection;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 /**
- * Gestion d'un serveur : création d'une connexion de type serveur pour attendre les connexions de clients
+ * Gestion d'un serveur : création d'une connection de type serveur pour attendre les connections de clients
  * @author emds
  *
  */
 public class ServeurSocket extends Thread {
 
 	/**
-	 * objet pour une connexion de type serveur (pour attendre des connexions de clients)
+	 * objet pour une connection de type serveur (pour attendre des connections de clients)
 	 */
 	private ServerSocket serverSocket ; 
 	/**
@@ -42,7 +42,7 @@ public class ServeurSocket extends Thread {
 	}
 	
 	/**
-	 * Méthode thread qui va attendre la connexion d'un client
+	 * Méthode thread qui va attendre la connection d'un client
 	 */
 	public void run() {
 		// objet qui va récupérer le socket du client qui s'est connecté
@@ -50,11 +50,11 @@ public class ServeurSocket extends Thread {
 		// boucle infinie pour attendre un nouveau client
 		while (true) {
 			try {
-				// attente d'une connexion
+				// attente d'une connection
 				System.out.println("le serveur attend");
 				socket = serverSocket.accept();
 				System.out.println("un client s'est connecté");
-				// création d'une connexion vers ce client, pour la communication (envoi et réception d'informations)
+				// création d'une connection vers ce client, pour la communication (envoi et réception d'informations)
 				new Connection(socket, delegate);
 			} catch (IOException e) {
 				// problème grave qui ne devrait pas se produire : arrêt du programme

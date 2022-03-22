@@ -1,9 +1,12 @@
 package controleur;
 
-import outils.connexion.AsyncResponse;
-import outils.connexion.ClientSocket;
-import outils.connexion.Connection;
-import outils.connexion.ServeurSocket;
+import modele.Jeu;
+import modele.JeuClient;
+import modele.JeuServeur;
+import outils.connection.AsyncResponse;
+import outils.connection.ClientSocket;
+import outils.connection.Connection;
+import outils.connection.ServeurSocket;
 import vue.Arene;
 import vue.ChoixJoueur;
 import vue.EntreeJeu;
@@ -14,13 +17,12 @@ import vue.EntreeJeu;
  * @author emds
  *
  */
-public class Controle implements AsyncResponse {
-
-	private static int PORT = 6666;
-	/**
-	 * Type de Jeu
+public class Controle implements AsyncResponse, Global {
+	/*
+	 * Jeu
 	 */
-	private String typeJeu;
+	private Jeu leJeu;
+
 	/**
 	 * frame EntreeJeu
 	 */
@@ -58,33 +60,52 @@ public class Controle implements AsyncResponse {
 	 */
 	public void evenementEntreeJeu(String info) {
 		if (info.equals("serveur")) {
-			typeJeu = "serveur";
 			new ServeurSocket(this, PORT);
+			this.leJeu = new JeuServeur(this);
 			this.frmEntreeJeu.dispose();
 			this.frmArene = new Arene();
 			this.frmArene.setVisible(true);
 		} else {
-			typeJeu = "client";
 			new ClientSocket(this, info, PORT);
 		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void evenementChoixJoueur(String pseudo, int selectedPerso) {
+		((JeuClient)this.leJeu).envoi(("pseudo" + SEPARATIONCHOIX + pseudo + SEPARATIONCHOIX + selectedPerso));
+		this.frmChoixJoueur.dispose();
+		frmArene.setVisible(true);
 	}
 
 	@Override
 	public void reception(Connection connection, String ordre, Object info) {
 		switch (ordre) {
-		case "connexion":
-			if (this.typeJeu.equals("client")) {
+		case CONNECTION:
+			if (!(this.leJeu instanceof JeuServeur)) {
+				this.leJeu = new JeuClient(this);
+				leJeu.connection(connection);
 				this.frmEntreeJeu.dispose();
 				this.frmArene = new Arene();
-				this.frmChoixJoueur = new ChoixJoueur();
+				this.frmChoixJoueur = new ChoixJoueur(this);
 				this.frmChoixJoueur.setVisible(true);
+			} else {
+				leJeu.connection(connection);
 			}
 			break;
-		case "réception":
+		case RECEPTION:
+			leJeu.reception(connection, info);
 			break;
-		case "déconnexion":
+		case DECONNECTION:
 			break;
 		}
 	}
-
+	
+	/**
+	 * Méthode envoi
+	 */
+	public void envoi(Connection connection, Object objet) {
+		connection.envoi(objet);
+	}
 }
