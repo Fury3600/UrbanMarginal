@@ -31,13 +31,33 @@ public class Arene extends JFrame implements Global{
 	 * Zone d'affichage du t'chat
 	 */
 	private JTextArea txtChat ;
+	/**
+	 * Panel spécifique aux murs
+	 */
+	private JPanel jpnMurs;
+	public JPanel getJpnMurs() {
+		return jpnMurs;
+	}
+	public void setJpnMurs(JPanel jpnMurs) {
+		this.jpnMurs.add(jpnMurs);
+		this.jpnMurs.repaint();
+	}
+	
+	/**
+	 * Méthode d'ajout des murs au panel jpnMurs
+	 * @param mur
+	 */
+	public void ajoutMur(Object mur) {
+		jpnMurs.add((JLabel) mur);
+		jpnMurs.repaint();
+	}
 
 	/**
 	 * Create the frame.
 	 */
 	public Arene() {
 		// Dimension de la frame en fonction de son contenu
-		this.getContentPane().setPreferredSize(new Dimension(800, 600 + 25 + 140));
+		this.getContentPane().setPreferredSize(new Dimension(XARENE, YARENE + 25 + 140));
 	    this.pack();
 	    // interdiction de changer la taille
 		this.setResizable(false);
@@ -47,15 +67,21 @@ public class Arene extends JFrame implements Global{
 		contentPane = new JPanel();
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		jpnMurs = new JPanel();
+		jpnMurs.setBounds(0, 0, XARENE, YARENE);
+		jpnMurs.setOpaque(false);
+		jpnMurs.setLayout(null);
+		contentPane.add(jpnMurs);
 	
 		txtSaisie = new JTextField();
-		txtSaisie.setBounds(0, 600, 800, 25);
+		txtSaisie.setBounds(0, YARENE, XARENE, 25);
 		contentPane.add(txtSaisie);
 		txtSaisie.setColumns(10);
 		
 		JScrollPane jspChat = new JScrollPane();
 		jspChat.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-		jspChat.setBounds(0, 625, 800, 140);
+		jspChat.setBounds(0, 625, XARENE, 140);
 		contentPane.add(jspChat);
 		
 		txtChat = new JTextArea();
@@ -65,9 +91,8 @@ public class Arene extends JFrame implements Global{
 		String chemin = "fonds/fondarene.jpg";
 		URL resource = getClass().getClassLoader().getResource(CHEMINFONDARENE);
 		lblFond.setIcon(new ImageIcon(resource));		
-		lblFond.setBounds(0, 0, 800, 600);
+		lblFond.setBounds(0, 0, XARENE, YARENE);
 		contentPane.add(lblFond);
 		
 	}
-
 }

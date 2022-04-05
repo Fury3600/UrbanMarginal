@@ -1,8 +1,11 @@
 package controleur;
 
+import javax.swing.JPanel;
+
 import modele.Jeu;
 import modele.JeuClient;
 import modele.JeuServeur;
+import modele.Mur;
 import outils.connection.AsyncResponse;
 import outils.connection.ClientSocket;
 import outils.connection.Connection;
@@ -22,6 +25,11 @@ public class Controle implements AsyncResponse, Global {
 	 * Jeu
 	 */
 	private Jeu leJeu;
+
+	/*
+	 * Jeu
+	 */
+	private JeuServeur jeuServ;
 
 	/**
 	 * frame EntreeJeu
@@ -65,18 +73,39 @@ public class Controle implements AsyncResponse, Global {
 			this.frmEntreeJeu.dispose();
 			this.frmArene = new Arene();
 			this.frmArene.setVisible(true);
+			((JeuServeur) this.leJeu).constructionMurs();
+
 		} else {
 			new ClientSocket(this, info, PORT);
 		}
 	}
-	
+
 	/**
-	 * 
+	 * Evenements lors du choix du joueur
 	 */
 	public void evenementChoixJoueur(String pseudo, int selectedPerso) {
-		((JeuClient)this.leJeu).envoi(("pseudo" + SEPARATIONCHOIX + pseudo + SEPARATIONCHOIX + selectedPerso));
+		((JeuClient) this.leJeu).envoi(("pseudo" + SEPARATIONCHOIX + pseudo + SEPARATIONCHOIX + selectedPerso));
 		this.frmChoixJoueur.dispose();
 		frmArene.setVisible(true);
+	}
+
+	public void evenementJeuServeur(String ordre, Object info) {
+		switch (ordre) {
+		case "ajout mur":
+			frmArene.ajoutMur(info);
+			break;
+		case "ajout panel murs":
+			leJeu.envoi((Connection) info, frmArene.getJpnMurs());
+			break;
+		}
+	}
+
+	public void evenementJeuClient(String ordre, Object info) {
+		switch (ordre) {
+		case "ajout panel murs":
+			frmArene.setJpnMurs((JPanel)info);
+			break;
+		}
 	}
 
 	@Override
@@ -85,7 +114,7 @@ public class Controle implements AsyncResponse, Global {
 		case CONNECTION:
 			if (!(this.leJeu instanceof JeuServeur)) {
 				this.leJeu = new JeuClient(this);
-				leJeu.connection(connection);
+				this.leJeu.connection(connection);
 				this.frmEntreeJeu.dispose();
 				this.frmArene = new Arene();
 				this.frmChoixJoueur = new ChoixJoueur(this);
@@ -101,11 +130,12 @@ public class Controle implements AsyncResponse, Global {
 			break;
 		}
 	}
-	
+
 	/**
 	 * Méthode envoi
 	 */
 	public void envoi(Connection connection, Object objet) {
 		connection.envoi(objet);
 	}
+
 }

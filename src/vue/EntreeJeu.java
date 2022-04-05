@@ -79,14 +79,19 @@ public class EntreeJeu extends JFrame {
 		btnStart.setBounds(186, 7, 89, 23);
 		contentPane.add(btnStart);
 		
+		/**
+		 * Labels descriptifs
+		 */
 		JLabel lblConnectAnExisting = new JLabel("Connect an existing server :");
 		lblConnectAnExisting.setBounds(10, 36, 197, 14);
 		contentPane.add(lblConnectAnExisting);
-		
 		JLabel lblIpServer = new JLabel("IP server :");
 		lblIpServer.setBounds(10, 61, 68, 14);
 		contentPane.add(lblIpServer);
 		
+		/**
+		 * Bouton "Connect"
+		 */
 		JButton btnConnect = new JButton("Connect");
 		btnConnect.addMouseListener(new MouseAdapter() {
 			@Override

@@ -10,6 +10,19 @@ public interface Global {
 	static int PORT = 6666;
 	
 	/**
+	 * Longueur et largeur de l'arène
+	 */
+	int XARENE = 800;
+	int YARENE = 600;
+	
+	/**
+	 * Longueur, largeur et quantité maximale des murs
+	 */
+	int XMUR = 34;
+	int YMUR = 35;
+	int NBMURS = 20;
+	
+	/**
 	 * Etats du client
 	 */
 	String CONNECTION = "connection";
