@@ -1,4 +1,4 @@
-package outils.connection;
+package outils.connexion;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -6,7 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
- * Gestion de la connection entre 2 ordinateurs distants
+ * Gestion de la connexion entre 2 ordinateurs distants
  * @author emds
  *
  */
@@ -26,8 +26,8 @@ public class Connection extends Thread {
 	private AsyncResponse delegate;
 
 	/**
-	 * Constructeur : crée une connection à partir d'un socket (contenant les spécificités de l'ordinateur distant)
-	 * @param socket objet de connection de type serveur ou client
+	 * Constructeur : crée une connexion à partir d'un socket (contenant les spécificités de l'ordinateur distant)
+	 * @param socket objet de connexion de type serveur ou client
 	 * @param delegate instance de la classe vers laquelle il faut transférer les réponses
 	 */
 	public Connection(Socket socket, AsyncResponse delegate) {
@@ -48,8 +48,8 @@ public class Connection extends Thread {
 		}
 		// démarrage du thread d'écoute (attente d'un message de l'ordi distant)
 		this.start() ;
-		// envoi de l'instance de connection vers la classe qui implémente AsyncResponse pour récupérer la réponse
-		this.delegate.reception(this, "connection", null);
+		// envoi de l'instance de connexion vers la classe qui implémente AsyncResponse pour récupérer la réponse
+		this.delegate.reception(this, "connexion", null);
 	}
 	
 	/**
@@ -89,8 +89,8 @@ public class Connection extends Thread {
 				System.out.println("erreur de classe sur réception : "+e);
 				System.exit(0);
 			} catch (IOException e) {
-				// envoi de l'information de déconnection  vers la classe qui implémente AsyncResponse pour récupérer la réponse
-				delegate.reception(this, "déconnection", null);
+				// envoi de l'information de déconnexion  vers la classe qui implémente AsyncResponse pour récupérer la réponse
+				delegate.reception(this, "déconnexion", null);
 				// demande d'arrêter de boucler sur l'attente d'une réponse
 				inOk = false ;
 				// l'ordinateur distant n'est plus accessible

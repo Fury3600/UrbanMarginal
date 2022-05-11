@@ -3,9 +3,11 @@ package modele;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import javax.swing.JLabel;
+
 import controleur.Controle;
 import controleur.Global;
-import outils.connection.Connection;
+import outils.connexion.Connection;
 
 /**
  * Gestion du jeu côté serveur
@@ -18,50 +20,91 @@ public class JeuServeur extends Jeu implements Global {
 	 */
 	private ArrayList<Mur> lesMurs = new ArrayList<Mur>() ;
 	/**
-	 * Collection de joueurs
+	 * Dictionnaire de joueurs indexé sur leur objet de connexion
 	 */
 	private Hashtable<Connection, Joueur> lesJoueurs = new Hashtable<Connection, Joueur>() ;
 	
 	/**
 	 * Constructeur
+	 * @param controle instance du contrôleur pour les échanges
 	 */
 	public JeuServeur(Controle controle) {
 		super.controle = controle;
 	}
 	
 	@Override
-	public void connection(Connection connection) {
-		lesJoueurs.put(connection, new Joueur());
-	}
-
-	@Override
-	public void reception(Connection connection, Object objet) {
-		String[] infos = ((String)objet).split(SEPARATIONCHOIX);
-		String ordre = infos[0];
-		switch (ordre) {
-			case "pseudo":
-				String pseudo = infos[1];
-				int selectedPerso = Integer.parseInt(infos[2]);
-				this.lesJoueurs.get(connection).initPerso(pseudo, selectedPerso);
-		}
-				
-	}
-	
-	@Override
-	public void deconnection() {
+	public void connexion(Connection connection) {
+		this.lesJoueurs.put(connection, new Joueur(this));
 	}
 
 	/**
-	 * Envoi d'une information vers tous les clients
-	 * fais appel plusieurs fois à l'envoi de la classe Jeu
+	 * Reçoit une information
 	 */
-	public void envoi() {
+	@Override
+	public void reception(Connection connection, Object info) {
+		String[] infos = ((String)info).split(STRINGSEPARE);
+		String ordre = infos[0];
+		String pseudo = infos[1];
+		switch(ordre) {
+		case PSEUDO :
+			// arrivée des informations d'un nouveau joueur
+			controle.evenementJeuServeur(AJOUTPANELMURS, connection);
+			int numPerso = Integer.parseInt(infos[2]);
+			this.lesJoueurs.get(connection).initPerso(pseudo, numPerso, this.lesJoueurs.values(), this.lesMurs);
+			controle.evenementJeuServeur(AJOUTTCHAT, "*** " + pseudo + " s'est connecté ***");
+			break;
+		// Reçoit un message de "evenementArene"
+		case TCHAT :
+			// reçoit les information d'un message envoyé
+			String message = this.lesJoueurs.get(connection).getPseudo() + " > " + infos[1];
+			controle.evenementJeuServeur(AJOUTTCHAT, message);
+			break;
+		// Reçoit un ordre de "evenementArene"
+		case ACTION :
+			
+		}
+	}
+	
+	@Override
+	public void deconnexion() {
 	}
 
+	/**
+	 * Ajoute le label affichant les joueurs
+	 * @param jLabel objet à afficher
+	 */
+	public void ajoutJLabelJeuArene(JLabel jLabel) {
+		this.controle.evenementJeuServeur(AJOUTJLABELJEU, jLabel);
+	}
+	
+	/**
+	 * Envoi d'une information vers tous les clients
+	 * fais appel plusieurs fois à l'envoi de la classe Jeu
+	 * @param info info venant du controlleur
+	 */
+	public void envoi(Object info) {
+		for(Connection connection : this.lesJoueurs.keySet()) {
+			super.envoi(connection, info);
+		}
+	}
+
+	/**
+	 * Envoi du panel de jeu à tous les joueurs
+	 */
+	public void envoiJeuATous() {
+		for(Connection connection : this.lesJoueurs.keySet()) {
+			this.controle.evenementJeuServeur(MODIFPANELJEU, connection);
+		}
+	}
+	
 	/**
 	 * Génération des murs
 	 */
 	public void constructionMurs() {
+		for(int k=0 ; k < NBMURS ; k++) {
+			this.lesMurs.add(new Mur());
+			this.controle.evenementJeuServeur(AJOUTMUR, lesMurs.get(lesMurs.size()-1).getjLabel());
+		}
 	}
 	
 }

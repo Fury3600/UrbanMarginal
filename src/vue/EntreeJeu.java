@@ -24,33 +24,33 @@ public class EntreeJeu extends JFrame {
 	/**
 	 * Zone de saisie de l'IP
 	 */
-	private JTextField txtIp;
-	
+	private JTextField txtIp;	
 	/**
 	 * Instance du contrôleur pour communiquer avec lui
 	 */
 	private Controle controle;
 
+	
+	// Evènements des différents boutons du menu
 	/**
 	 * clic sur le bouton Start pour lancer le serveur
 	 */
 	private void btnStart_clic() {
 		this.controle.evenementEntreeJeu("serveur");
 	}
-	
 	/**
 	 * clic sur le bouton Exit pour arrêter l'application
 	 */
 	private void btnExit_clic() {
 		System.exit(0);
 	}
-	
 	/**
 	 * clic sur le bouton Connect pour se connecter à un serveur
 	 */
 	private void btnConnect_clic() {
 		this.controle.evenementEntreeJeu(this.txtIp.getText());
 	}
+	
 
 	/**
 	 * Create the frame.

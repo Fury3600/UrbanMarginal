@@ -8,11 +8,25 @@ import java.io.Serializable;
 
 public class Duree implements Serializable
 {
+/**
+ * Durée en microseconde
+ */
   private long microsecondes;
+  /**
+   * Durée en heures, minutes, secondes et microsecondes
+   */
   private int heure, minute, seconde, microseconde;
+  
+  /**
+   * Constructeur de la classe Duree
+   */
   public Duree()
   {
   }
+  /**
+   * Constructeur de la classe Duree avec des microsecondes type long
+   * @param microsecondes durée en microsecondes type long
+   */
   public Duree(long microsecondes)
   {
     this.microsecondes = microsecondes;
@@ -25,6 +39,10 @@ public class Duree implements Serializable
     temps = temps / 60L;
     this.heure = (int)temps;
   }
+  /**
+   * Constructeur de la classe Duree avec des microsecondes type int
+   * @param microseconde durée en microsecondes type int
+   */
   public Duree(int microseconde)
   {
     if(microseconde < 0)
@@ -39,6 +57,11 @@ public class Duree implements Serializable
     this.microseconde = microseconde;
     this.microsecondes = (long)this.microseconde;
   }
+  /**
+   * Constructeur de la classe Duree avec des secondes et des microsecondes
+   * @param seconde durée en seconde type int
+   * @param microseconde durée en microseconde type int
+   */
   public Duree(int seconde, int microseconde)
   {
     this(microseconde);
@@ -55,6 +78,12 @@ public class Duree implements Serializable
     this.seconde = seconde;
     this.microsecondes += 1000000L * (long)this.seconde;
   }
+  /**
+   * Constructeur de la classe Duree avec des minutes, secondes et microsecondes
+   * @param minute durée en minute type int
+   * @param seconde durée en seconde type int
+   * @param microseconde durée en microseconde type int
+   */
   public Duree(int minute, int seconde, int microseconde)
   {
     this(seconde, microseconde);
@@ -71,6 +100,13 @@ public class Duree implements Serializable
     this.minute = minute;
     this.microsecondes += 60L * 1000000L * (long)this.minute;
   }
+  /**
+   * Constructeur de la classe Duree avec des heures, minutes, secondes et microsecondes
+   * @param heure durée en heure type int
+   * @param minute durée en minute type int
+   * @param seconde durée en seconde type int
+   * @param microseconde durée en microseconde type int
+   */
   public Duree(int heure, int minute, int seconde, int microseconde)
   {
     this(minute, seconde, microseconde);
@@ -82,6 +118,10 @@ public class Duree implements Serializable
     this.heure = heure;
     this.microsecondes += 60L * 60L * 1000000L * (long)this.heure;
   }
+  /**
+   * Constructeur de la classe Duree avec une variable de type Duree
+   * @param duree variable de type Duree
+   */
   public Duree(Duree duree)
   {
     this.microsecondes = duree.microsecondes;
@@ -90,30 +130,58 @@ public class Duree implements Serializable
     this.minute = duree.minute;
     this.heure = duree.heure;
   }
+  /**
+   * Convertit en microsecondes de type long
+   * @return résultat en microsecondes
+   */
   public long enMicrosecondes()
   {
     return this.microsecondes;
   }
+  /**
+   * Convertit en microsecondes de type long
+   * @return résultat en microsecondes
+   */
   public long enMillisecondes()
   {
     return this.microsecondes / 1000L;
   }
+  /**
+   * Convertit en microsecondes de type int
+   * @return résultat en microsecondes
+   */
   public int getMicroseconde()
   {
     return this.microseconde;
   }
+  /**
+   * Convertit en microsecondes de type int
+   * @return résultat en microsecondes
+   */
   public int getMilliseconde()
   {
     return this.microseconde / 1000;
   }
+  /**
+   * Convertit en secondes
+   * @return résultat en secondes
+   */
   public int getSeconde()
   {
     return this.seconde;
   }
+  /**
+   * Convertit en minutes
+   * @return résultat en minutes
+   */
   public int getMinute()
   {
     return this.minute;
   }
+  /**
+   * Convertit en heures
+   * @return résultat en heures
+   */
   public int getHeure()
   {
     return this.heure;

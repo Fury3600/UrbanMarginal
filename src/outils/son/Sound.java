@@ -32,24 +32,24 @@ import outils.son.exceptions.SonTypeException;
 public class Sound
     implements Serializable, Runnable
 {
-  //Durée du son
+  ///Durée du son
   private Duree duree;
-  //Flux de kecture audio
+  ///Flux de kecture audio
   private AudioInputStream lecteurAudio;
-  //Format du fichier audio
+  ///Format du fichier audio
   private AudioFileFormat formatFichier;
-  //Format du son
+  ///Format du son
   private AudioFormat format;
-  //Clip jouant le son
+  ///Clip jouant le son
   private Clip clip;
-  //Thread permettant de jouer le son en tâche de fond
+  ///Thread permettant de jouer le son en tâche de fond
   private Thread thread;
-  //Nombre de boucle restante à effectué
+  ///Nombre de boucle restante à effectué
   private int tour;
-  //pause : inqique si le son est en pause ou non
-  //fermerALaFin : indique si le son doit être détruit une fois la derniére boucle de son exécutée
+  ///pause : inqique si le son est en pause ou non
+  ///fermerALaFin : indique si le son doit être détruit une fois la derniére boucle de son exécutée
   private boolean pause, fermerALaFin;
-  //Ecouteurs des événement sons
+  ///Ecouteurs des événement sons
   private Vector ecouteurs = new Vector();
   /**
    * Construit un son situé à une URL précise

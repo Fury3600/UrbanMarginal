@@ -1,36 +1,44 @@
 package modele;
 
 import controleur.Controle;
-import outils.connection.Connection;
+import outils.connexion.Connection;
 
 /**
  * Informations et méthodes communes aux jeux client et serveur
  *
  */
 public abstract class Jeu {
-
+	
+	/**
+	 * Instance de Controle, pour communiquer avec le contrôleur
+	 */
 	protected Controle controle;
 
 	/**
-	 * Réception d'une connection (pour communiquer avec un ordinateur distant)
+	 * Réception d'une connexion (pour communiquer avec un ordinateur distant)
+	 * @param connection objet connection pour la communication
 	 */
-	public abstract void connection(Connection connection) ;
+	public abstract void connexion(Connection connection) ;
 	
 	/**
 	 * Réception d'une information provenant de l'ordinateur distant
+	 * @param connection objet de connexion d'où provient l'information
+	 * @param info information reçue
 	 */
-	public abstract void reception(Connection connection, Object objet) ;
+	public abstract void reception(Connection connection, Object info) ;
 	
 	/**
-	 * Déconnection de l'ordinateur distant
+	 * Déconnexion de l'ordinateur distant
 	 */
-	public abstract void deconnection() ;
+	public abstract void deconnexion() ;
 	
 	/**
 	 * Envoi d'une information vers un ordinateur distant
+	 * @param connection objet de connexion pour accéder à l'ordinateur distant
+	 * @param info information à envoyer
 	 */
-	public void envoi(Connection connection, Object objet) {
-		this.controle.envoi(connection, objet);
+	public void envoi(Connection connection, Object info) {
+		this.controle.envoi(connection, info);
 	}
 	
 }

@@ -1,65 +1,200 @@
+/**
+ * 
+ */
 package controleur;
 
-import java.net.URL;
-import vue.ChoixJoueur;
-
+/**
+ * Global contient les constantes du programme
+ * @author emds
+ *
+ */
 public interface Global {
-	/**
-	 * Port du serveur
-	 */
-	static int PORT = 6666;
 	
 	/**
-	 * Etats du client
+	 * N° du port d'écoute du serveur
 	 */
-	String CONNECTION = "connection";
+	int PORT = 6666;
+	/**
+	 * Nombre de personnages différents
+	 */
+	int NBPERSOS = 3;
+	/**
+	 * Caractère de séparation dans un chemin de fichiers
+	 */
+	String CHEMINSEPARATOR = "/";
+	/**
+	 * Chemin du dossier des images de fonds
+	 */
+	String CHEMINFONDS = "fonds"+CHEMINSEPARATOR;
+	/**
+	 * Chemin du dossier de l'image de la boule
+	 */
+	String CHEMINBOULES = "boules"+CHEMINSEPARATOR;
+	/**
+	 * Chemin du dossier de l'image du mur
+	 */
+	String CHEMINMURS = "murs"+CHEMINSEPARATOR;
+	/**
+	 * Chemin du dossier des images des personnages
+	 */
+	String CHEMINPERSONNAGES = "personnages"+CHEMINSEPARATOR;
+	/**
+	 * Chemin du dossier des sons
+	 */
+	String CHEMINSONS = "sons"+CHEMINSEPARATOR;
+	/**
+	 * Chemin de l'image de fond de la vue ChoixJoueur
+	 */
+	String FONDCHOIX = CHEMINFONDS+"fondchoix.jpg";
+	/**
+	 * Chemin de l'image de fond de la vue Arene
+	 */
+	String FONDARENE = CHEMINFONDS+"fondarene.jpg";
+	/**
+	 * Extension des fichiers des images des personnages
+	 */
+	String EXTFICHIERPERSO = ".gif";
+	/**
+	 * Début du nom des images des personnages
+	 */
+	String PERSO = "perso";
+	/**
+	 * Chemin de l'image de la boule
+	 */
+	String BOULE = CHEMINBOULES+"boule.gif";
+	/**
+	 * Chemin de l'image du mur
+	 */
+	String MUR = CHEMINMURS+"mur.gif";
+	/**
+	 * état marche du personnage
+	 */
+	String MARCHE = "marche";
+	/**
+	 * état touché du personnage
+	 */
+	String TOUCHE = "touche";
+	/**
+	 * état mort du personnage
+	 */
+	String MORT = "mort";
+	/**
+	 * Caractère de séparation dans les chaines transférées
+	 */
+	String STRINGSEPARE = "~";
+	
+	// Ordres envoyés par la classe Controle
+	
+	/**
+	 * Message "connexion" envoyé par la classe Connection
+	 */
+	String CONNEXION = "connexion";
+	/**
+	 * Message "réception" envoyé par la classe Connection
+	 */
 	String RECEPTION = "réception";
-	String DECONNECTION = "déconnexion";
+	/**
+	 * Message "déconnexion" envoyé par la classe Connection
+	 */
+	String DECONNEXION = "déconnexion";
 	
 	/**
-	 * Chemin et format des sons
+	 * Message "pseudo" envoyé pour la création d'un joueur
 	 */
-	String CHEMINSONS = "sons/";
-	String FORMATSON = ".wav";
+	String PSEUDO = "pseudo";
+	/**
+	 * vie de départ pour tous les joueurs
+	 */
+	int MAXVIE = 10 ;
+	/**
+	 * gain de points de vie lors d'une attaque
+	 */
+	int GAIN = 1 ; 
+	/**
+	 * perte de points de vie lors d'une attaque
+	 */
+	int PERTE = 2 ; 
+	/**
+	 * nombre de murs dans l'arène
+	 */
+	int NBMURS = 20;
+	/**
+	 * hauteur de la zone de jeu de l'arène
+	 */
+	int HAUTEURARENE = 600;
+	/**
+	 * largeur de la zone de heu de l'arène
+	 */
+	int LARGEURARENE = 800;
+	/**
+	 * hauteur d'un mur
+	 */
+	int HAUTEURMUR = 35;
+	/**
+	 * largeur d'un mur
+	 */
+	int LARGEURMUR = 34;
+	/**
+	 * hauteur du personnage
+	 */
+	int HAUTEURPERSO = 44;
+	/**
+	 * largeur du personnage
+	 */
+	int LARGEURPERSO = 39;
+	/**
+	 * hauteur du message
+	 */
+	int HAUTEURMESSAGE = 8;
+	/**
+	 * orientation du personnage vers la gauche
+	 */
+	int GAUCHE = 0;
+	/**
+	 * orientation du personnage vers la droite
+	 */
+	int DROITE = 1;
+	
+	// Ordres de la classe Controle
 	
 	/**
-	 * Format des images
+	 * Message "serveur" pour la création d'un serveur
 	 */
-	String FORMATIMG = ".gif";
+	String SERVEUR = "serveur";
 	/**
-	 * Chemin des fonds pour le meneu de sélection et de l'arène
+	 * Message "Client" pour la création d'un client
 	 */
-	String CHEMINFONDCHOIX = "fonds/fondchoix.jpg";
-	String CHEMINFONDARENE = "fonds/fondarene.jpg";
+	String CLIENT = "coteClient";
 	/**
-	 * Chemin pour les images des boules
+	 * ordre pour ajouter un mur dans l'arène du serveur
 	 */
-	String CHEMINBOULE = "boules/boule" + FORMATIMG;
+	String AJOUTMUR = "ajout mur";
 	/**
-	 * Chemin pour l'image des murs
+	 * ordre pour ajouter le panel des murs dans l'arène du client
 	 */
-	String CHEMINMURS = "murs/mur" + FORMATIMG;
+	String AJOUTPANELMURS = "ajout panel murs";
 	/**
-	 * Chemin pour l'affichage des personnages, ainsi que leur pose et leur direction
+	 * ordre pour ajouter un jLabel dans l'arène du serveur (joueur, message, boule)
 	 */
-	String CHEMINPERSO = "personnages/perso";
-	String POSECHOIX = "marche1";
-	String DIRECTION = "d1";
-	
+	String AJOUTJLABELJEU = "ajout jLabel jeu";
 	/**
-	 * Nombre de persos maximum à choisir
+	 * ordre pour modifier le panel du jeu dans l'aeène du client
 	 */
-	public final int PERSOMAX = 3;
-	
+	String MODIFPANELJEU = "modif panel jeu";
 	/**
-	 * Caractère séparant les informations pour evenementChoixJoueur de Controle
+	 * Message "tchat" envoyé par "evenementArene" de la classe Controle
 	 */
-	String SEPARATIONCHOIX = "~";
-	
+	String TCHAT = "tchat";
 	/**
-	 * Quantité de vie, de gain et de perte de vie des joueurs
+	 * Message "action" envoyé par "evenementArene" de la classe Controle
 	 */
-	static final int MAXVIE = 10 ;
-	static final int GAIN = 1 ;
-	static final int PERTE = 2 ;
+	String ACTION = "action";
+	/**
+	 * Message "modifTchat" envoyé par la classe Controle
+	 */
+	String MODIFTCHAT = "modifTchat";
+	/**
+	 * Message "ajoutTchat" envoyé par la classe Controle
+	 */
+	String AJOUTTCHAT = "ajoutTchat";
 }
