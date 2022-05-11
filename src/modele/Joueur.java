@@ -1,5 +1,6 @@
 package modele;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.net.URL;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import controleur.Global;
+import outils.connexion.Connection;
 
 /**
  * Gestion des joueurs
@@ -127,15 +129,66 @@ public class Joueur extends Objet implements Global {
 	}
 
 	/**
-	 * Gère une action reçue et qu'il faut afficher (déplacement, tire de boule...)
+	 * Gère une action reçue et qu'il faut afficher (déplacement, tir de boule...)
 	 */
-	public void action() {
+	public void action(Integer info, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+		deplace(info, lesJoueurs, lesMurs);
+		// Gère l'étape du perso lors d'un pas
+		switch (etape) {
+		case 1:
+		case 2:
+		case 3:
+			this.etape++;
+			break;
+		case 4:
+			this.etape = 1;
+			break;
+		}
+		// Affiche le perso
+		this.affiche(MARCHE, this.etape);
 	}
 
 	/**
 	 * Gère le déplacement du personnage
 	 */
-	private void deplace() { 
+	private void deplace(int direction, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) { 
+		int oldPos;
+		switch (direction) {
+		// Gauche
+		case 37:
+			oldPos = posX;
+			this.posX -= VITESSE;
+			if (this.posX < 0 || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+				this.posX = oldPos;
+			}
+			this.orientation = 0;
+			break;
+		// Haut
+		case 38:
+			oldPos = posY;
+			this.posY -= VITESSE;
+			if (this.posY < 0 || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+				this.posY = oldPos;
+			}
+			break;
+		// Droite
+		case 39:
+			oldPos = posX;
+			this.posX += VITESSE;
+			if (this.posX > LARGEURARENE - LARGEURPERSO || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+				this.posX = oldPos;
+			}
+			this.orientation = 1;
+			break;
+		// Bas
+		case 40:
+			oldPos = posY;
+			this.posY += VITESSE;
+			if (this.posY > HAUTEURARENE - HAUTEURPERSO - HAUTEURMESSAGE || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+				this.posY = oldPos;
+			}
+			break;
+		}
 	}
 
 	/**

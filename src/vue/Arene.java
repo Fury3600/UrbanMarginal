@@ -15,6 +15,8 @@ import controleur.Controle;
 import controleur.Global;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * frame de l'arène du jeu
@@ -112,6 +114,7 @@ public class Arene extends JFrame implements Global {
 		this.jpnJeu.removeAll();
 		this.jpnJeu.add(jpnJeu);
 		this.jpnJeu.repaint();
+		this.contentPane.requestFocus();
 	}
 	/**
 	 * Ajout d'un joueur, son message ou sa boule, dans le panel de jeu
@@ -133,6 +136,7 @@ public class Arene extends JFrame implements Global {
 			if(!this.txtSaisie.getText().equals("")) {
 				this.controle.evenementArene(this.txtSaisie.getText());
 				this.txtSaisie.setText("");
+				this.contentPane.requestFocus();
 			}
 		}
 	}
@@ -141,18 +145,18 @@ public class Arene extends JFrame implements Global {
 	 * Récupère la touche directionnelle
 	 * @param e la touche appuyée
 	 */
-	private void contentPane_KeyPressed(KeyEvent e) {
+	public void contentPane_KeyPressed(KeyEvent e) {
 		int numTouche = -1;
 		switch(e.getKeyCode()) {
-		case KeyEvent.VK_UP:
 		case KeyEvent.VK_LEFT:
-		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_UP:
 		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_DOWN:
 			numTouche = e.getKeyCode();
 			break;
 		}
 		if (numTouche != -1){
-			controle.evenementArene(Integer.toString(numTouche));
+			this.controle.evenementArene((Integer)numTouche);
 		}
 
 	}
@@ -216,6 +220,12 @@ public class Arene extends JFrame implements Global {
 		contentPane.add(jspChat);
 		
 		txtTchat = new JTextArea();
+		txtTchat.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				contentPane_KeyPressed(e);
+			}
+		});
 		txtTchat.setEditable(false);
 		jspChat.setViewportView(txtTchat);
 		

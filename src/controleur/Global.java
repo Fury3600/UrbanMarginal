@@ -11,6 +11,10 @@ package controleur;
 public interface Global {
 	
 	/**
+	 * Vitesse de déplacement en pixels
+	 */
+	int VITESSE = 10;
+	/**
 	 * N° du port d'écoute du serveur
 	 */
 	int PORT = 6666;
