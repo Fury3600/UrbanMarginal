@@ -47,6 +47,10 @@ public interface Global {
 	 */
 	String CHEMINSONS = "sons"+CHEMINSEPARATOR;
 	/**
+	 * Chemins des sons de l'arène
+	 */
+	String[] SONSARENE = {CHEMINSONS+"fight.wav", CHEMINSONS+"hurt.wav", CHEMINSONS+"death.wav"};
+	/**
 	 * Chemin de l'image de fond de la vue ChoixJoueur
 	 */
 	String FONDCHOIX = CHEMINFONDS+"fondchoix.jpg";
@@ -122,6 +126,9 @@ public interface Global {
 	 * nombre de murs dans l'arène
 	 */
 	int NBMURS = 20;
+	
+	// Taille des différents objets
+	
 	/**
 	 * hauteur de la zone de jeu de l'arène
 	 */
@@ -147,9 +154,19 @@ public interface Global {
 	 */
 	int LARGEURPERSO = 39;
 	/**
+	 * Largeur de la boule
+	 */
+	int LARGEURBOULE = 17;
+	/**
+	 * Hauteur de la boule
+	 */
+	int HAUTEURBOULE = 17;
+	/**
 	 * hauteur du message
 	 */
 	int HAUTEURMESSAGE = 8;
+	
+	
 	/**
 	 * orientation du personnage vers la gauche
 	 */
@@ -185,6 +202,10 @@ public interface Global {
 	 * ordre pour modifier le panel du jeu dans l'aeène du client
 	 */
 	String MODIFPANELJEU = "modif panel jeu";
+	/**
+	 * ordre pour jouer un son
+	 */
+	String JOUESON = "joue son";
 	/**
 	 * Message "tchat" envoyé par "evenementArene" de la classe Controle
 	 */

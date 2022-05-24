@@ -1,6 +1,7 @@
 package modele;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Hashtable;
 
 import javax.swing.JLabel;
@@ -36,6 +37,14 @@ public class JeuServeur extends Jeu implements Global {
 	public void connexion(Connection connection) {
 		this.lesJoueurs.put(connection, new Joueur(this));
 	}
+	
+	/**
+	 * Getter sur lesJoueurs
+	 * @return lesJoueurs liste des joueurs
+	 */
+	public Collection getLesJoueurs() {
+		return this.lesJoueurs.values();
+	}
 
 	/**
 	 * Reçoit une information
@@ -44,14 +53,14 @@ public class JeuServeur extends Jeu implements Global {
 	public void reception(Connection connection, Object info) {
 		String[] infos = ((String)info).split(STRINGSEPARE);
 		String ordre = infos[0];
-		String pseudo = infos[1];
 		switch(ordre) {
 		case PSEUDO :
 			// arrivée des informations d'un nouveau joueur
 			controle.evenementJeuServeur(AJOUTPANELMURS, connection);
+			String pseudo = infos[1];
 			int numPerso = Integer.parseInt(infos[2]);
 			this.lesJoueurs.get(connection).initPerso(pseudo, numPerso, this.lesJoueurs.values(), this.lesMurs);
-			controle.evenementJeuServeur(AJOUTTCHAT, "*** " + pseudo + " s'est connecté ***");
+			this.controle.evenementJeuServeur(AJOUTTCHAT, "*** " + pseudo + " s'est connecté ***");
 			break;
 		// Reçoit un message de "evenementArene"
 		case TCHAT :
@@ -67,7 +76,9 @@ public class JeuServeur extends Jeu implements Global {
 	}
 	
 	@Override
-	public void deconnexion() {
+	public void deconnexion(Connection connection) {
+		this.lesJoueurs.get(connection).departJoueur();
+		this.lesJoueurs.remove(connection);
 	}
 
 	/**
@@ -104,7 +115,7 @@ public class JeuServeur extends Jeu implements Global {
 	public void constructionMurs() {
 		for(int k=0 ; k < NBMURS ; k++) {
 			this.lesMurs.add(new Mur());
-			this.controle.evenementJeuServeur(AJOUTMUR, lesMurs.get(lesMurs.size()-1).getjLabel());
+			this.controle.evenementJeuServeur(AJOUTMUR, ((ArrayList<Mur>) lesMurs).get(lesMurs.size()-1).getjLabel());
 		}
 	}
 	

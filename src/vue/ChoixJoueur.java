@@ -14,6 +14,7 @@ import javax.swing.SwingConstants;
 
 import controleur.Controle;
 import controleur.Global;
+import outils.son.Son;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -25,6 +26,11 @@ import java.awt.Dimension;
  */
 public class ChoixJoueur extends JFrame implements Global {
 
+	// Sons du menu
+	private Son welcome;
+	private Son precedent;
+	private Son suivant;
+	private Son go;
 	/**
 	 * Panel général
 	 */
@@ -50,6 +56,7 @@ public class ChoixJoueur extends JFrame implements Global {
 	 * Clic sur la flèche "précédent" pour afficher le personnage précédent
 	 */
 	private void lblPrecedent_clic() {
+		precedent.play();
 		numPerso = ((numPerso+1)%NBPERSOS)+1;
 		affichePerso();
 	}
@@ -58,6 +65,7 @@ public class ChoixJoueur extends JFrame implements Global {
 	 * Clic sur la flèche "suivant" pour afficher le personnage suivant
 	 */
 	private void lblSuivant_clic() {
+		suivant.play();
 		numPerso = (numPerso%NBPERSOS)+1 ;
 		affichePerso();
 	}
@@ -71,6 +79,7 @@ public class ChoixJoueur extends JFrame implements Global {
 			this.txtPseudo.requestFocus();
 		} else {
 			this.controle.evenementChoixJoueur(this.txtPseudo.getText(), numPerso);
+			go.play();
 		}
 	}
 	
@@ -194,6 +203,14 @@ public class ChoixJoueur extends JFrame implements Global {
 
 		// positionnement sur la zone de saisie
 		txtPseudo.requestFocus();
-
+		
+		// Instanciation des sons
+		welcome = new Son(getClass().getClassLoader().getResource(CHEMINSONS + "welcome.wav"));
+		precedent = new Son(getClass().getClassLoader().getResource(CHEMINSONS + "precedent.wav"));
+		suivant = new Son(getClass().getClassLoader().getResource(CHEMINSONS + "suivant.wav"));
+		go = new Son(getClass().getClassLoader().getResource(CHEMINSONS + "go.wav"));
+		
+		// Son de bienvenue
+		welcome.play();
 	}
 }

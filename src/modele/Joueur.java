@@ -1,7 +1,7 @@
 package modele;
 
-import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,7 +11,6 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 
 import controleur.Global;
-import outils.connexion.Connection;
 
 /**
  * Gestion des joueurs
@@ -70,6 +69,30 @@ public class Joueur extends Objet implements Global {
 	public String getPseudo() {
 		return pseudo;
 	}
+	
+	/**
+	 * Getter de l'orientation
+	 * @return orientation l'orientation du joueur
+	 */
+	public int getOrientation() {
+		return orientation;
+	}
+	
+	/**
+	 * Getter de la position X du joueur
+	 * @return posX position X du joueur
+	 */
+	public int getPosX() {
+		return posX;
+	}
+	
+	/**
+	 * Getter de la position Y du joueur
+	 * @return posY position Y du joueur
+	 */
+	public int getPosY() {
+		return posY;
+	}
 
 	/**
 	 * Initialisation d'un joueur (pseudo et numéro, calcul de la 1ère position, affichage, création de la boule)
@@ -78,7 +101,7 @@ public class Joueur extends Objet implements Global {
 	 * @param lesJoueurs collection contenant tous les joueurs
 	 * @param lesMurs collection contenant les murs
 	 */
-	public void initPerso(String pseudo, int numPerso, Collection<Joueur>lesJoueurs, ArrayList<Mur> lesMurs) {
+	public void initPerso(String pseudo, int numPerso, Collection<Joueur>lesJoueurs, Collection<Mur> lesMurs) {
 		this.pseudo = pseudo;
 		this.numPerso = numPerso;
 		System.out.println("joueur "+pseudo+" - num perso "+numPerso+" créé");
@@ -88,11 +111,14 @@ public class Joueur extends Objet implements Global {
 		this.message = new JLabel();
 		message.setHorizontalAlignment(SwingConstants.CENTER);
 		message.setFont(new Font("Dialog", Font.PLAIN, 8));
+		// création du label de la boule
+		this.boule = new Boule(this.jeuServeur);
 		// calcul de la première position du personnage
 		this.premierePosition(lesJoueurs, lesMurs);
 		// demande d'ajout du label du personnage et du message dans l'arène du serveur
 		this.jeuServeur.ajoutJLabelJeuArene(jLabel);
 		this.jeuServeur.ajoutJLabelJeuArene(message);
+		this.jeuServeur.ajoutJLabelJeuArene(boule.getjLabel());
 		// demande d'affichage du personnage
 		this.affiche(MARCHE, this.etape);
 	}
@@ -102,12 +128,12 @@ public class Joueur extends Objet implements Global {
 	 * @param lesJoueurs collection contenant tous les joueurs
 	 * @param lesMurs collection contenant les murs
 	 */
-	private void premierePosition(Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
+	private void premierePosition(Collection lesJoueurs, Collection lesMurs) {
 		jLabel.setBounds(0, 0, LARGEURPERSO, HAUTEURPERSO);
 		do {
 			posX = (int) Math.round(Math.random() * (LARGEURARENE - LARGEURPERSO)) ;
 			posY = (int) Math.round(Math.random() * (HAUTEURARENE - HAUTEURPERSO - HAUTEURMESSAGE)) ;
-		}while(this.toucheJoueur(lesJoueurs) || this.toucheMur(lesMurs));
+		}while(toucheCollectionObjet(lesJoueurs) != null || toucheCollectionObjet(lesMurs) != null);
 	}
 	
 	/**
@@ -131,34 +157,48 @@ public class Joueur extends Objet implements Global {
 	/**
 	 * Gère une action reçue et qu'il faut afficher (déplacement, tir de boule...)
 	 */
-	public void action(Integer info, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) {
-		deplace(info, lesJoueurs, lesMurs);
-		// Gère l'étape du perso lors d'un pas
-		switch (etape) {
-		case 1:
-		case 2:
-		case 3:
-			this.etape++;
-			break;
-		case 4:
-			this.etape = 1;
-			break;
+	public void action(Integer info, Collection lesJoueurs, Collection lesMurs) {
+		if (!this.estMort()) {
+			switch (info) {
+			case 37:
+			case 38:
+			case 39:
+			case 40:
+				deplace(info, lesJoueurs, lesMurs);
+				// Gère l'étape du perso lors d'un pas
+				switch (etape) {
+				case 1:
+				case 2:
+				case 3:
+					this.etape++;
+					break;
+				case 4:
+					this.etape = 1;
+					break;
+				}
+				// Affiche le perso
+				this.affiche(MARCHE, this.etape);
+				break;
+			case 32:
+				if (!boule.getjLabel().isVisible()) {
+					boule.tireBoule(this, lesMurs);
+				}
+				break;
+			}
 		}
-		// Affiche le perso
-		this.affiche(MARCHE, this.etape);
 	}
 
 	/**
 	 * Gère le déplacement du personnage
 	 */
-	private void deplace(int direction, Collection<Joueur> lesJoueurs, ArrayList<Mur> lesMurs) { 
+	private void deplace(int direction, Collection lesJoueurs, Collection lesMurs) { 
 		int oldPos;
 		switch (direction) {
 		// Gauche
 		case 37:
 			oldPos = posX;
 			this.posX -= VITESSE;
-			if (this.posX < 0 || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+			if (this.posX < 0 || toucheCollectionObjet(lesJoueurs) != null || toucheCollectionObjet(lesMurs) != null) {
 				this.posX = oldPos;
 			}
 			this.orientation = 0;
@@ -167,7 +207,7 @@ public class Joueur extends Objet implements Global {
 		case 38:
 			oldPos = posY;
 			this.posY -= VITESSE;
-			if (this.posY < 0 || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+			if (this.posY < 0 || toucheCollectionObjet(lesJoueurs) != null || toucheCollectionObjet(lesMurs) != null) {
 				this.posY = oldPos;
 			}
 			break;
@@ -175,7 +215,7 @@ public class Joueur extends Objet implements Global {
 		case 39:
 			oldPos = posX;
 			this.posX += VITESSE;
-			if (this.posX > LARGEURARENE - LARGEURPERSO || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+			if (this.posX > LARGEURARENE - LARGEURPERSO || toucheCollectionObjet(lesJoueurs) != null || toucheCollectionObjet(lesMurs) != null) {
 				this.posX = oldPos;
 			}
 			this.orientation = 1;
@@ -184,53 +224,25 @@ public class Joueur extends Objet implements Global {
 		case 40:
 			oldPos = posY;
 			this.posY += VITESSE;
-			if (this.posY > HAUTEURARENE - HAUTEURPERSO - HAUTEURMESSAGE || toucheJoueur(lesJoueurs) || toucheMur(lesMurs)) {
+			if (this.posY > HAUTEURARENE - HAUTEURPERSO - HAUTEURMESSAGE || toucheCollectionObjet(lesJoueurs) != null || toucheCollectionObjet(lesMurs) != null) {
 				this.posY = oldPos;
 			}
 			break;
 		}
-	}
-
-	/**
-	 * Contrôle si le joueur touche un des autres joueurs
-	 * @param lesJoueurs collection contenant tous les joueurs
-	 * @return true si le joueur touche un autre joueur
-	 */
-	private Boolean toucheJoueur(Collection<Joueur> lesJoueurs) {
-		for(Joueur unJoueur : lesJoueurs) {
-			if(!this.equals(unJoueur)) {
-				if(super.toucheObjet(unJoueur)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
-	* Contrôle si le joueur touche un des murs
-	 * @param lesMurs collection contenant tous les murs
-	 * @return true si le joueur touche un mur
-	 */
-	private Boolean toucheMur(ArrayList<Mur> lesMurs) {
-		for(Mur unMur : lesMurs) {
-			if(super.toucheObjet(unMur)) {
-				return true;
-			}
-		}
-		return false;
 	}
 	
 	/**
 	 * Gain de points de vie après avoir touché un joueur
 	 */
 	public void gainVie() {
+		this.vie += GAIN;
 	}
 	
 	/**
 	 * Perte de points de vie après avoir été touché 
 	 */
 	public void perteVie() {
+		this.vie = Math.max(0, this.vie - PERTE);
 	}
 	
 	/**
@@ -238,13 +250,19 @@ public class Joueur extends Objet implements Global {
 	 * @return true si vie = 0
 	 */
 	public Boolean estMort() {
-		return null;
+		return this.vie <= 0;
 	}
 	
 	/**
 	 * Le joueur se déconnecte et disparait
 	 */
 	public void departJoueur() {
+		if (super.jLabel != null) {
+			super.jLabel.setVisible(false);
+			this.message.setVisible(false);
+			this.boule.getjLabel().setVisible(false);
+			jeuServeur.envoiJeuATous();
+		}
 	}
 	
 }

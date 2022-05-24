@@ -13,6 +13,8 @@ import javax.swing.JTextField;
 
 import controleur.Controle;
 import controleur.Global;
+import outils.son.Son;
+
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -24,6 +26,11 @@ import java.awt.event.MouseEvent;
  *
  */
 public class Arene extends JFrame implements Global {
+	
+	/**
+	 * Sons de l'arène
+	 */
+	private Son[] sonsArene = new Son[SONSARENE.length];
 	/**
 	 * Controle
 	 */
@@ -152,6 +159,7 @@ public class Arene extends JFrame implements Global {
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_RIGHT:
 		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_SPACE:
 			numTouche = e.getKeyCode();
 			break;
 		}
@@ -159,6 +167,10 @@ public class Arene extends JFrame implements Global {
 			this.controle.evenementArene((Integer)numTouche);
 		}
 
+	}
+	
+	public void joueSon(int son) {
+		sonsArene[son].play();
 	}
 	
 	/**
@@ -212,6 +224,9 @@ public class Arene extends JFrame implements Global {
 					contentPane_KeyPressed(e);
 				}
 			});
+			for (int k = 0; k < SONSARENE.length; k++) {
+				sonsArene[k] = new Son(getClass().getClassLoader().getResource(SONSARENE[k]));
+			}
 		}
 		
 		JScrollPane jspChat = new JScrollPane();

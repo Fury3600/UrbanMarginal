@@ -124,6 +124,9 @@ public class Controle implements AsyncResponse, Global {
 		case MODIFTCHAT :
 			this.frmArene.setTxtTchat((String)info);
 			break;
+		case JOUESON :
+			this.frmArene.joueSon((int)info);
+			break;
 		}
 	}
 	
@@ -169,6 +172,7 @@ public class Controle implements AsyncResponse, Global {
 			this.leJeu.reception(connection, info);
 			break;
 		case DECONNEXION :
+			this.leJeu.deconnexion(connection);
 			break;
 		}
 		

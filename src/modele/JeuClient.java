@@ -49,11 +49,14 @@ public class JeuClient extends Jeu implements Global {
 		} else if(info instanceof String) {
 			// arrivée d'un message du tchat
 			this.controle.evenementJeuClient(MODIFTCHAT, info);
+		} else if (info instanceof Integer) {
+			this.controle.evenementJeuClient(JOUESON, info);
 		}
 	}
 	
 	@Override
-	public void deconnexion() {
+	public void deconnexion(Connection connection) {
+		System.exit(0);
 	}
 
 	/**
